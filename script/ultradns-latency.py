@@ -19,7 +19,7 @@ def file_path(string):
   if os.path.isfile(string):
     return string
   else:
-    raise NotAFileError(string)
+    raise FileNotFoundError(string)
 
 
 def mean_and_stddev(latencies: list[int]) -> tuple[float, float]:
