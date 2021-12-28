@@ -8,24 +8,20 @@ then parses app launch latencies and returns the average and
 standard deviation.
 """
 
-import os
 import re
 import argparse
 import pathlib
+import json
 from typing import Union
-
-
-def file_path(string):
-  if os.path.isfile(string):
-    return string
-  else:
-    raise FileNotFoundError(string)
 
 
 def mean_and_stddev(latencies: list[int]) -> tuple[float, float]:
   """Takes a list of app launch latencies (in ms) and returns
-  a tuple of: (mean, standard_deviation).
+  a tuple of: (mean, standard_deviation). Returns (None, None)
+  if launch_latencies list is empty.
   """
+  if not latencies:
+    return (None, None)
   mean = sum(latencies) / len(latencies)
   variance = sum([((x - mean) ** 2) for x in latencies]) / len(latencies)
   stddev = variance ** 0.5
@@ -89,7 +85,7 @@ def main():
     )
   parser.add_argument(
     "log_path",
-    type=file_path,
+    type=str,
     help="Location of log file to parse."
   )
   parser.add_argument(
@@ -104,14 +100,29 @@ def main():
     default=20,
     help="Number of most recent log entries to sample."
     )
+  parser.add_argument(
+    "--json",
+    action="store_true",
+    help="Output mean and stddev as machine readable json."
+    )
   args = parser.parse_args()
 
   match_logs = sample_logs(args.log_path, args.match_string, args.sample_size)
   latencies = [parse_launch_latency(log) for log in match_logs]
   app_launch_mean, app_launch_stddev = mean_and_stddev(latencies)
-  print(
-    f"App launch mean: {app_launch_mean} ms. "
-    f"Standard Deviation: {app_launch_stddev} ms.")
+  if args.json:
+      data_dict = {
+        "app_launch_latency_mean": app_launch_mean,
+        "app_launch_latency_stddev": app_launch_stddev
+      }
+      message = json.dumps(data_dict)
+  elif app_launch_mean and app_launch_stddev and not args.json:
+    message = f"App launch mean: {app_launch_mean} ms. "\
+      f"Standard Deviation: {app_launch_stddev} ms."
+  else:
+    message = "No log entries matching pattern."
+
+  print(message)
 
 
 if __name__ == '__main__':
