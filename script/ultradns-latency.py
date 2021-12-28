@@ -112,8 +112,8 @@ def main():
   app_launch_mean, app_launch_stddev = mean_and_stddev(latencies)
   if args.json:
       data_dict = {
-        "app_launch_latency_mean": app_launch_mean,
-        "app_launch_latency_stddev": app_launch_stddev
+        "app_launch_latency_mean_ms": app_launch_mean,
+        "app_launch_latency_stddev_ms": app_launch_stddev
       }
       message = json.dumps(data_dict)
   elif app_launch_mean and app_launch_stddev and not args.json:
