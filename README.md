@@ -125,9 +125,9 @@ So, Vagrant VMs configured with the Ansible provisioner are my choice for the lo
 The assignment specified Ansible as the means by which this code is to be executed, so alternatives were not considered.  Ansible is good enough, we shall use Ansible.
 
 ### Issues
-I had the most problems with, and spent the most time just trying to get the test enviornment working.  The code for setting up multiple VMs in Vagrant was challenging in Ruby because Vagrant evaluates outer contexts first, and using nested config structures resulted in strange behavior, with certain configs being ignored while others at the same context level being used.
+I had the most problems with, and spent the most time just trying to get the test enviornment working.  The code for setting up multiple VMs in Vagrant was challenging in Ruby because Vagrant evaluates outer contexts first, and using nested config structures resulted in strange behavior, with certain configs being ignored while others at the same context level being used.  Of particular note was setting up a private local network with unique IPs for each machine, which it seemed to ignore no matter what I did.
 
-Also, most of the code found on the internet averaged around 5 years old, and didn't work.  Vagrant and VMs are kind of old-hat in the industry I guess.  Ultimately I found that I didn't need to change most of the default configurations, so I stripped out everything that was unnecessary and let Vagrant do its thing.
+Also, most of the code found on the internet averaged around 5 years old, and didn't work.  Vagrant and VMs are kind of old-hat in the industry I guess.  Ultimately I found that I didn't need to change most of the default configurations, so I stripped out everything that was unnecessary and let Vagrant do its thing, and it worked out fine.
 
 The biggest challenge was trying to get playbooks to work with the VMs outside of the Vagrant Ansible provisioner.  It took quite a while of research to figure out two key pieces of information: 
 1. That the Vagrant Ansible provisioner generates its own inventory file `.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory`, which includes the location of the individual ssh private keys that Vagrant generates for each host, along with each host's ssh port mapping.
