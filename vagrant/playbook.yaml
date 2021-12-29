@@ -1,0 +1,22 @@
+---
+- name: Generate fake logs
+  hosts: all
+  remote_user: vagrant
+
+  tasks:
+    - name: Copy gen-log.py script.
+      ansible.builtin.copy:
+        src: ../scripts/gen-log.py
+        dest: /tmp/
+        mode: '0640'
+    - name: Copy madeup.log sample log.
+      ansible.builtin.copy:
+        src: ../madeup.log
+        dest: /tmp/
+        mode: '0640'
+    - name: Generate random log file
+      command:
+        cmd: python3 /tmp/gen-log.py /tmp/madeup.log
+        creates: /var/log/ultradns-quiz-madeup.log
+      become: true
+
