@@ -9,9 +9,10 @@
         src: ../scripts/ultradns-latency.py
         dest: /tmp/
         mode: '0640'
-    - name: Return mean and stddev of matched log entries
-      command:
-        cmd: python3 /tmp/ultradns-latency.py 
-        creates: /var/log/ultradns-quiz-madeup.log
-      become: true
+    - name: Return startup latency mean and stddev of matched log entries
+      shell: python3 /tmp/ultradns-latency.py /var/log/ultradns-quiz-madeup.log --json
+      register: metrics
+    - name: Display script output
+      debug:
+        var: metrics.stdout
 

@@ -12,10 +12,10 @@ import re
 import argparse
 import pathlib
 import json
-from typing import Union
+from typing import Union, List, Tuple
 
 
-def mean_and_stddev(latencies: list[int]) -> tuple[float, float]:
+def mean_and_stddev(latencies: List[int]) -> Tuple[float, float]:
   """Takes a list of app launch latencies (in ms) and returns
   a tuple of: (mean, standard_deviation). Returns (None, None)
   if launch_latencies list is empty.
@@ -56,7 +56,7 @@ def sample_logs(
   log_path: Union[str, pathlib.Path],
   match_string: str,
   sample_size: int
-  ) -> list[str]:
+  ) -> List[str]:
   """Returns last {sample_size} entries in log matching pattern:
 
   [2021-07-01 16:49:17,440] INFO {match_string} took 25 ms
