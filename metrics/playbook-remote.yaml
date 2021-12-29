@@ -1,0 +1,18 @@
+---
+- name: Obtain mean and stddev of startup latencies
+  hosts: neustar
+  remote_user: vagrant
+
+  tasks:
+    - name: Copy ultradns-latency.py script.
+      ansible.builtin.copy:
+        src: ../scripts/ultradns-latency.py
+        dest: /tmp/
+        mode: '0640'
+    - name: Return startup latency mean and stddev of matched log entries
+      shell: python3 /tmp/ultradns-latency.py /var/log/ultradns-quiz-madeup.log --json
+      register: metrics
+    - name: Display metrics script output
+      debug:
+        var: metrics.stdout
+

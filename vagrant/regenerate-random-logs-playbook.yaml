@@ -1,0 +1,16 @@
+---
+- name: Regenerates test logs
+  hosts: all
+  remote_user: vagrant
+
+  tasks:
+    - name: Copy gen-log.py script.
+      ansible.builtin.copy:
+        src: ../scripts/gen-log.py
+        dest: /tmp/
+        mode: '0640'
+    - name: Generate random log file
+      command:
+        cmd: python3 /tmp/gen-log.py /tmp/madeup.log
+      # Runs as root, since /var/log access requires elevated permissions
+      become: true
