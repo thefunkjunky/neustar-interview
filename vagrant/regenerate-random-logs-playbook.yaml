@@ -1,0 +1,11 @@
+---
+- name: Regenerates test logs
+  hosts: all
+  remote_user: vagrant
+
+  tasks:
+    - name: Generate random log file
+      command:
+        cmd: python3 /tmp/gen-log.py /tmp/madeup.log
+      # Runs as root, since /var/log access requires elevated permissions
+      become: true
