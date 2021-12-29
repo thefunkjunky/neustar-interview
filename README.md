@@ -31,7 +31,7 @@ This will create 5 VMs configured with the `vagrant/playbook.yaml` ansible playb
 ```bash
 $ python3 gen-log.py --help
 usage: gen-log.py [-h] [--dest_log_file DEST_LOG_FILE]
-                  [--max_latency_range MAX_LATENCY_RANGE]
+                  [--min_latency MIN_LATENCY] [--max_latency MAX_LATENCY]
                   [--max_logs_range MAX_LOGS_RANGE]
                   [--match_string MATCH_STRING]
                   sample_log_path
@@ -45,8 +45,10 @@ optional arguments:
   -h, --help            show this help message and exit
   --dest_log_file DEST_LOG_FILE
                         Location of sample log file.
-  --max_latency_range MAX_LATENCY_RANGE
-                        Max latency range.
+  --min_latency MIN_LATENCY
+                        Minimum random latency.
+  --max_latency MAX_LATENCY
+                        Max random latency.
   --max_logs_range MAX_LOGS_RANGE
                         Max number of random match entry logs.
   --match_string MATCH_STRING
@@ -65,6 +67,13 @@ When running playbooks outside of the Vagrant Ansible provisioner, you may need 
 ```
 Host 127.0.0.1
     IdentitiesOnly yes
+```
+
+### Destroy
+To destroy the test environment, go to `vagrant/` dir and:
+
+```bash
+(venv)$ vagrant destroy -f
 ```
 
 ## Gathering application launch metrics
@@ -104,7 +113,7 @@ optional arguments:
 ## Design Notes
 
 ### Language
-I choose Python for several reasons: 
+I chose Python for several reasons: 
 1. It's by far my strongest language.
 1. It already comes installed on most VM images.
 1. It doesn't have to be compiled.
@@ -125,7 +134,7 @@ So, Vagrant VMs configured with the Ansible provisioner are my choice for the lo
 The assignment specified Ansible as the means by which this code is to be executed, so alternatives were not considered.  Ansible is good enough, we shall use Ansible.
 
 ### Issues
-I had the most problems with, and spent the most time just trying to get the test enviornment working.  The code for setting up multiple VMs in Vagrant was challenging in Ruby because Vagrant evaluates outer contexts first, and using nested config structures resulted in strange behavior, with certain configs being ignored while others at the same context level being used.  Of particular note was setting up a private local network with unique IPs for each machine, which it seemed to ignore no matter what I did.
+I had the most problems with, and spent the most time on just trying to get the test enviornment working.  The code for setting up multiple VMs in Vagrant was challenging in Ruby because Vagrant evaluates outer contexts first, and using nested config structures resulted in strange behavior, with certain configs being ignored while others at the same context level being used.  Of particular note was setting up a private local network with unique IPs for each machine, which it seemed to ignore no matter what I did.
 
 Also, most of the code found on the internet averaged around 5 years old, and didn't work.  Vagrant and VMs are kind of old-hat in the industry I guess.  Ultimately I found that I didn't need to change most of the default configurations, so I stripped out everything that was unnecessary and let Vagrant do its thing, and it worked out fine.
 

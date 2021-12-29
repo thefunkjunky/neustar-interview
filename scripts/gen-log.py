@@ -25,10 +25,16 @@ def main():
     help="Location of sample log file."
   )
   parser.add_argument(
-    "--max_latency_range",
+    "--min_latency",
+    type=int,
+    default=0,
+    help="Minimum random latency."
+  )
+  parser.add_argument(
+    "--max_latency",
     type=int,
     default=800,
-    help="Max latency range."
+    help="Max random latency."
   )
   parser.add_argument(
     "--max_logs_range",
@@ -62,9 +68,12 @@ def main():
   num_match_logs = random.randint(0, args.max_logs_range)
   for n in range(0, num_match_logs):
     random_index = random.randint(0, len_non_match_logs_list - 1)
-    random_log = random.choice(match_logs)
-    random_latency = random.randint(0, args.max_latency_range)
-    generated_log = re.sub(r"took \d+", f"took {random_latency}", random_log)
+    random_match_log = random.choice(match_logs)
+    random_latency = random.randint(args.min_latency, args.max_latency)
+    generated_log = re.sub(
+      r"took \d+", f"took {random_latency}",
+      random_match_log
+    )
     generated_logs[random_index] = generated_log
 
   with open(args.dest_log_file, "w") as f:

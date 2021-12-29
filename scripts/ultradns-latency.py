@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Samples the last 20 lines of a log file matching pattern:
+Samples the last number lines of a log file matching pattern:
 
 [2021-07-01 16:49:17,440] INFO Ultradns quiz application took 25 ms
 
@@ -32,7 +32,9 @@ def parse_launch_latency(
   log_entry: str
   ) -> int:
   """Parses the app launch latency in a log entry and returns the value in ms.
-  Pattern regex is "took[ ]*(\\d+)[ ]*(ms|s|m)"."""
+  Pattern regex is "took[ ]*(\\d+)[ ]*(ms|s|m)".
+
+  Returns None if no latency value found."""
   pattern = r"took[ ]*(\d+)[ ]*(ms|s|m)"
   regex = re.compile(pattern)
   matches = re.findall(regex, log_entry)
@@ -40,6 +42,8 @@ def parse_launch_latency(
   if not matches:
     return None
 
+  # Although it wasn't in the given specs, this will also
+  # convert entries found in seconds (s) or minutes (m).
   time = int(matches[0][0])
   time_unit = matches[0][1]
   if time_unit == "s":
@@ -57,14 +61,17 @@ def sample_logs(
   match_string: str,
   sample_size: int
   ) -> List[str]:
-  """Returns last {sample_size} entries in log matching pattern:
+  """Returns last {sample_size} entries in logs matching pattern:
 
   [2021-07-01 16:49:17,440] INFO {match_string} took 25 ms
   """
 
+  # I want an exception to be raised if this doesn't work.
   with open(log_path, "r") as f:
     logs = f.readlines()
 
+  # Only include match logs that actually include a launch latency.
+  # A sneaky entry without a number was found in the sample logs.
   match_logs_list = [
     log for log in logs
     if match_string in log
