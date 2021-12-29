@@ -19,7 +19,7 @@
         cmd: python3 /tmp/gen-log.py /tmp/madeup.log
       # Don't regenerate new logs each time provisioning playbook is run.
       # Run playbook 'regenerate-random-logs-playbook.yaml' to
-      # regenerate random logs.
+      # regenerate new randomized logs.
         creates: /var/log/ultradns-quiz-madeup.log
       # Runs as root, since /var/log access requires elevated permissions
       become: true
