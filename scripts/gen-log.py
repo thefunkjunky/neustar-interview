@@ -22,7 +22,7 @@ def main():
     "--dest_log_file",
     type=str,
     default="/var/log/ultradns-quiz-madeup.log",
-    help="Location of sample log file."
+    help="Location of generated log file."
   )
   parser.add_argument(
     "--min_latency",

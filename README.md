@@ -44,7 +44,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --dest_log_file DEST_LOG_FILE
-                        Location of sample log file.
+                        Location of generated log file.
   --min_latency MIN_LATENCY
                         Minimum random latency.
   --max_latency MAX_LATENCY
